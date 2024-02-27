@@ -8,8 +8,8 @@ public static class TrafficLightConfig
     public const string ControlUnitToTrafficLightRoutingKey = "control_unit_to_traffic_light_routing_key";
     public const string TrafficLightToControlUnitRoutingKey = "traffic_light_to_control_unit_routing_key";
 
-    public const string TrafficLight1Id = "traffic_light_id_1";
-    public const string TrafficLight2Id = "traffic_light_id_2";
-    public const string TrafficLight3Id = "traffic_light_id_3";
-    public const string TrafficLight4Id = "traffic_light_id_4";
+    public const string Set1Light1Id = "set_1_light_1";
+    public const string Set1Light2Id = "set_1_light_2";
+    public const string Set2Light1Id = "set_2_light_1";
+    public const string Set2Light2Id = "set_2_light_2";
 }

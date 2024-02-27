@@ -7,14 +7,20 @@ public class TrafficLightSet
 
     public TrafficLightSet(List<TrafficLight> trafficLights)
     {
-        Status = TrafficLightStatus.Idle;
+        Status = TrafficLightStatus.Stop;
         TrafficLights = trafficLights;
+    }
+
+    public void SetStatus()
+    {
+        Status = TrafficLights.All(tl => tl.Color == TrafficLightColor.Red)
+            ? TrafficLightStatus.Stop
+            : TrafficLightStatus.Transition;
     }
 }
 
 public enum TrafficLightStatus
 {
-    Idle,
-    Transition,
-    Finished
+    Stop,
+    Transition
 }

@@ -1,14 +1,10 @@
-using System.Text;
-using System.Text.Json;
-using Microsoft.Extensions.Logging;
-using RabbitMQ.Client.Events;
 using Shared.Contracts;
 
 namespace TrafficLight;
 
 public class TrafficLightService
 {
-    private static readonly List<Shared.Models.TrafficLight> TrafficLights = new();
+    private static readonly List<Shared.Models.TrafficLight> TrafficLights = [];
     
     public readonly Func<TrafficLightCommandMessage, TrafficLightCommandMessage> CommandHandler = message =>
     {
@@ -17,10 +13,8 @@ public class TrafficLightService
             HandleLights(trafficLightCommand);
         }
 
-        foreach (var trafficLight in TrafficLights)
-        {
-            Console.WriteLine($"Light id: {trafficLight.TrafficLightId}. Color: {trafficLight.Color.ToString()}");
-        }
+        var lightStatus = TrafficLights.Select(tl => tl.Color.ToString());
+        Console.WriteLine($"Light statuses in traffic lights service: {string.Join(",", lightStatus)}");
 
         return message;
     };

@@ -9,8 +9,8 @@ using Shared.Services;
 var builder = Host.CreateApplicationBuilder(args);
 
 builder.Services.AddSingleton<IControlUnit, ControlUnit.Services.ControlUnit>();
-builder.Services.AddSingleton<ITrafficLightCommandService, TrafficLightCommandService>();
-builder.Services.AddTransient<IMessagingService, MessagingService>();
+builder.Services.AddSingleton<ITrafficLightService, TrafficLightService>();
+builder.Services.AddMessagingService();
 builder.Services.AddSingleton<IDateTimeProvider, DateTimeProvider>();
 builder.Logging.AddConsole();
 builder.Logging.SetMinimumLevel(LogLevel.Information);
@@ -18,6 +18,9 @@ builder.Logging.SetMinimumLevel(LogLevel.Information);
 using var host = builder.Build();
 
 var controlUnit = host.Services.GetService<IControlUnit>();
+
+
+
 
 while (true)
 {

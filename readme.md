@@ -31,6 +31,8 @@ which can be found under master branch.
     docker-compose up
     ```
 3. The ControlUnit will now start managing the traffic lights, and the TrafficLight project will simulate the behavior of traffic lights.
+4. Follow the logs of ControlUnit to see the status of lights. Be patient, it might take some 10 seconds after RabbitMQ is up for
+lights to start working as ControlUnit and TrafficLights are in sync.
 
 ## Configuration
 

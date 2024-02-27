@@ -1,6 +1,7 @@
-using System.Xml.Serialization;
 using ControlUnit.Services;
+using Microsoft.Extensions.Logging;
 using NSubstitute;
+using Shared.Models;
 using Shared.Services;
 
 namespace UnitTest.ControlUnit.Services;
@@ -8,11 +9,32 @@ namespace UnitTest.ControlUnit.Services;
 public class ControlUnitTests
 {
     private readonly IMessagingService _messagingService = Substitute.For<IMessagingService>();
-    private readonly ITrafficLightCommandService _trafficLightCommandService = Substitute.For<ITrafficLightCommandService>();
+    private readonly ITrafficLightService _trafficLightService = Substitute.For<ITrafficLightService>();
+
+    private readonly ILogger<global::ControlUnit.Services.ControlUnit> _logger =
+        Substitute.For<ILogger<global::ControlUnit.Services.ControlUnit>>();
+
+    private readonly IControlUnit _sut;
+
+    public ControlUnitTests()
+    {
+        _sut = new global::ControlUnit.Services.ControlUnit(_messagingService, _trafficLightService, _logger);
+    }
 
     [Fact]
     public async Task RunNormalOperation_Throws_WhenAllSetsInTransition()
     {
-        
+        // arrange
+        var status1 = TrafficLightStatus.Transition;
+        var status2 = TrafficLightStatus.Transition;
+        _trafficLightService.GetSetStatuses(Arg.Any<TrafficLightSet>(), Arg.Any<TrafficLightSet>())
+            .Returns((status1, status2));
+
+        // act
+        var result = await Record.ExceptionAsync(() => _sut.RunNormalOperation());
+
+        // assert
+        Assert.NotNull(result);
+        Assert.IsType<ApplicationException>(result);
     }
 }

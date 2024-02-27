@@ -12,8 +12,10 @@ var builder = Host.CreateApplicationBuilder(args);
 
 var cBuilder = new ConfigurationBuilder().AddEnvironmentVariables();
 builder.Configuration.AddConfiguration(cBuilder.Build());
-builder.Services.AddSingleton<IMessagingService, MessagingService>();
+
+builder.Services.AddMessagingService();
 builder.Services.AddSingleton<IDateTimeProvider, DateTimeProvider>();
+builder.Services.AddSingleton<IRabbitMqService, RabbitMqService>();
 builder.Logging.AddConsole();
 builder.Logging.SetMinimumLevel(LogLevel.Information);
 
@@ -31,6 +33,3 @@ while (true)
 
     await Task.Delay(2000);
 }
-
-
-Console.WriteLine("Hello, World!");

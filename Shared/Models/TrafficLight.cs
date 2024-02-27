@@ -11,7 +11,7 @@ public class TrafficLight
     public TrafficLight(string trafficLightId)
     {
         TrafficLightId = trafficLightId;
-        LastChanged = DateTime.UtcNow;
+        LastChanged = DateTime.MinValue;
         Color = TrafficLightColor.Red;
     }
 
