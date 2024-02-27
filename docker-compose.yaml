@@ -1,0 +1,50 @@
+version: '3.8'
+
+services:
+  control-unit:
+    build:
+      context: ./ControlUnit
+      dockerfile: Dockerfile
+    container_name: control-unit
+    depends_on:
+      rabbitmq:
+        condition: service_healthy
+    networks:
+      - traffic-light-network
+    environment:
+      RABBIT_HOSTNAME: rabbitmq
+
+  traffic-light:
+    build:
+      context: ./TrafficLight
+      dockerfile: Dockerfile
+    container_name: traffic-light
+    depends_on:
+      rabbitmq:
+        condition: service_healthy
+    networks:
+      - traffic-light-network
+    environment:
+      RABBIT_HOSTNAME: rabbitmq
+
+  rabbitmq:
+    image: rabbitmq:3-management
+    container_name: rabbitmq
+    hostname: rabbitmq
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    environment:
+      RABBITMQ_DEFAULT_USER: guest
+      RABBITMQ_DEFAULT_PASS: guest
+    networks:
+      - traffic-light-network
+    healthcheck:
+      test: rabbitmq-diagnostics check_port_connectivity
+      interval: 10s
+      timeout: 10s
+      retries: 10
+
+networks:
+  traffic-light-network:
+    driver: bridge

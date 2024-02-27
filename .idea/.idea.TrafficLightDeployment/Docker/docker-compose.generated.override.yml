@@ -1,0 +1,41 @@
+# This is a generated file. Not intended for manual editing.
+version: "3.8"
+services:
+  control-unit:
+    build:
+      context: "H:\\dev\\TrafficLightDeployment\\ControlUnit"
+      dockerfile: "Dockerfile"
+      target: "base"
+    command: []
+    entrypoint:
+    - "dotnet"
+    - "/app/bin/Debug/net8.0/ControlUnit.dll"
+    environment:
+      DOTNET_ENVIRONMENT: "Development"
+      DOTNET_USE_POLLING_FILE_WATCHER: "true"
+    image: "controlunit:dev"
+    ports: []
+    volumes:
+    - "C:\\Users\\koni\\.nuget\\packages:/home/app/.nuget/packages"
+    - "H:\\dev\\TrafficLightDeployment\\ControlUnit:/app:rw"
+    - "H:\\dev\\TrafficLightDeployment:/src:rw"
+    working_dir: "/app"
+  traffic-light:
+    build:
+      context: "H:\\dev\\TrafficLightDeployment\\TrafficLight"
+      dockerfile: "Dockerfile"
+      target: "base"
+    command: []
+    entrypoint:
+    - "dotnet"
+    - "/app/bin/Debug/net8.0/TrafficLight.dll"
+    environment:
+      DOTNET_ENVIRONMENT: "Development"
+      DOTNET_USE_POLLING_FILE_WATCHER: "true"
+    image: "trafficlight:dev"
+    ports: []
+    volumes:
+    - "C:\\Users\\koni\\.nuget\\packages:/home/app/.nuget/packages"
+    - "H:\\dev\\TrafficLightDeployment\\TrafficLight:/app:rw"
+    - "H:\\dev\\TrafficLightDeployment:/src:rw"
+    working_dir: "/app"
