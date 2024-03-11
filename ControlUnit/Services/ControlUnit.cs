@@ -102,7 +102,7 @@ public class ControlUnit : IControlUnit
 
     private async Task SendStatusToDatabase()
     {
-        foreach (var model in _trafficLightSet1.TrafficLights.Select(trafficLight => new TrafficLightStatusModel
+        foreach (var model in _trafficLightSet1.TrafficLights.Select(trafficLight => new TrafficLightStatusDto
                  {
                      TrafficLightId = trafficLight.TrafficLightId,
                      Color = trafficLight.Color.ToString(),
@@ -112,7 +112,7 @@ public class ControlUnit : IControlUnit
             await _databaseService.AddTrafficLightStatus(model);
         }
 
-        foreach (var model in _trafficLightSet2.TrafficLights.Select(trafficLight => new TrafficLightStatusModel
+        foreach (var model in _trafficLightSet2.TrafficLights.Select(trafficLight => new TrafficLightStatusDto
                  {
                      TrafficLightId = trafficLight.TrafficLightId,
                      Color = trafficLight.Color.ToString(),

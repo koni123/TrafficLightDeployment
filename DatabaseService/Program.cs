@@ -1,4 +1,5 @@
 using DatabaseService;
+using DatabaseService.Database;
 using DatabaseService.Services;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.EntityFrameworkCore;
@@ -31,7 +32,10 @@ if (app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 
 app.MapPost("/traffic-light-status",
-        async (TrafficLightStatusModel model, IDbService dbService) => { await dbService.AddModelToDatabaseAsync(model); })
+        async (TrafficLightStatusDto model, IDbService dbService) =>
+        {
+            await dbService.AddModelToDatabaseAsync(model);
+        })
     .WithName("SaveTrafficLightStatus")
     .WithOpenApi();
 
@@ -39,7 +43,8 @@ app.MapGet("/traffic-light-status",
         async (IDbService dbService) =>
         {
             var list = await dbService.GetCurrentStatusAsync();
-            return list;
+            return list
+                .Select(tl => tl.ToDto());
         })
     .WithName("GetTrafficLightStatus")
     .WithOpenApi();
@@ -48,7 +53,8 @@ app.MapGet("/traffic-light-status/all",
         async (IDbService dbService) =>
         {
             var list = await dbService.GetAllAsync();
-            return list;
+            return list
+                .Select(tl => tl.ToDto());
         })
     .WithName("GetTrafficLightStatusAll")
     .WithOpenApi();

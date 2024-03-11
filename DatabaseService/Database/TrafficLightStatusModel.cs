@@ -1,6 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 
-namespace Shared.Models;
+namespace DatabaseService.Database;
 
 public class TrafficLightStatusModel
 {
@@ -8,4 +8,5 @@ public class TrafficLightStatusModel
     public required string TrafficLightId { get; set; }
     public required string Color { get; set; }
     public required DateTime LastChanged { get; set; }
+    public required DateTime ModifiedAt { get; set; }
 }

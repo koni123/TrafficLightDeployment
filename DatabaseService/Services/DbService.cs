@@ -1,3 +1,4 @@
+using DatabaseService.Database;
 using Microsoft.EntityFrameworkCore;
 using Shared.Models;
 
@@ -12,13 +13,20 @@ public class DbService : IDbService
         _context = context;
     }
 
-    public async Task AddModelToDatabaseAsync(TrafficLightStatusModel statusModel)
+    public async Task AddModelToDatabaseAsync(TrafficLightStatusDto statusModel)
     {
         await _context.TrafficLight
-            .Where(tl => tl.LastChanged < DateTime.UtcNow.AddMinutes(-10))
+            .Where(tl => tl.ModifiedAt < DateTime.UtcNow.AddMinutes(-10))
             .ExecuteDeleteAsync();
 
-        _context.Add(statusModel);
+        var model = new TrafficLightStatusModel
+        {
+            TrafficLightId = statusModel.TrafficLightId,
+            Color = statusModel.Color,
+            LastChanged = statusModel.LastChanged,
+            ModifiedAt = DateTime.UtcNow
+        };
+        _context.Add(model);
         await _context.SaveChangesAsync();
     }
 

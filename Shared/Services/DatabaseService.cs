@@ -14,10 +14,10 @@ public class DatabaseService : IDatabaseService
         _httpClient.BaseAddress = new Uri("http://database-service:8080");
     }
 
-    public async Task AddTrafficLightStatus(TrafficLightStatusModel statusModel)
+    public async Task AddTrafficLightStatus(TrafficLightStatusDto statusDto)
     {
         using var message = new HttpRequestMessage(HttpMethod.Post, "traffic-light-status");
-        message.Content = new StringContent(JsonSerializer.Serialize(statusModel), Encoding.UTF8, "application/json");
+        message.Content = new StringContent(JsonSerializer.Serialize(statusDto), Encoding.UTF8, "application/json");
         await _httpClient.SendAsync(message);
     }
 }

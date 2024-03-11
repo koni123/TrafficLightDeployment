@@ -1,7 +1,6 @@
 using Microsoft.EntityFrameworkCore;
-using Shared.Models;
 
-namespace DatabaseService;
+namespace DatabaseService.Database;
 
 public class TrafficLightContext: DbContext
 {

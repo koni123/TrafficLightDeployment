@@ -4,5 +4,5 @@ namespace Shared.Services;
 
 public interface IDatabaseService
 {
-    Task AddTrafficLightStatus(TrafficLightStatusModel statusModel);
+    Task AddTrafficLightStatus(TrafficLightStatusDto statusDto);
 }
