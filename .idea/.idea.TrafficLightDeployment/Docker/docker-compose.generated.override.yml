@@ -20,6 +20,25 @@ services:
     - "H:\\dev\\TrafficLightDeployment\\ControlUnit:/app:rw"
     - "H:\\dev\\TrafficLightDeployment:/src:rw"
     working_dir: "/app"
+  database-service:
+    build:
+      context: "H:\\dev\\TrafficLightDeployment\\DatabaseService"
+      dockerfile: "Dockerfile"
+      target: "base"
+    command: []
+    entrypoint:
+    - "dotnet"
+    - "/app/bin/Debug/net8.0/DatabaseService.dll"
+    environment:
+      ASPNETCORE_ENVIRONMENT: "Development"
+      DOTNET_USE_POLLING_FILE_WATCHER: "true"
+    image: "databaseservice:dev"
+    ports: []
+    volumes:
+    - "C:\\Users\\koni\\.nuget\\packages:/home/app/.nuget/packages"
+    - "H:\\dev\\TrafficLightDeployment\\DatabaseService:/app:rw"
+    - "H:\\dev\\TrafficLightDeployment:/src:rw"
+    working_dir: "/app"
   traffic-light:
     build:
       context: "H:\\dev\\TrafficLightDeployment\\TrafficLight"

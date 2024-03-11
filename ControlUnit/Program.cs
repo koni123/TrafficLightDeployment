@@ -14,13 +14,11 @@ builder.Services.AddMessagingService();
 builder.Services.AddSingleton<IDateTimeProvider, DateTimeProvider>();
 builder.Logging.AddConsole();
 builder.Logging.SetMinimumLevel(LogLevel.Information);
+builder.Services.AddHttpClient<IDatabaseService, DatabaseService>();
 
 using var host = builder.Build();
 
 var controlUnit = host.Services.GetService<IControlUnit>();
-
-
-
 
 while (true)
 {
@@ -34,6 +32,3 @@ while (true)
         Console.WriteLine($"Failure in running traffic lights: {e.Message}");
     }
 }
-
-
-Console.WriteLine("Hello, World!");

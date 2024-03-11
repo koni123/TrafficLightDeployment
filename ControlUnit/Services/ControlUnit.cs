@@ -11,18 +11,21 @@ public class ControlUnit : IControlUnit
     private TrafficLightSet _trafficLightSet2 = new([]);
 
     private readonly IMessagingService _messagingService;
+    private readonly IDatabaseService _databaseService;
     private readonly ITrafficLightService _trafficLightService;
     private readonly ILogger<ControlUnit> _logger;
 
     public ControlUnit(
         IMessagingService messagingService,
         ITrafficLightService trafficLightService,
-        ILogger<ControlUnit> logger)
+        ILogger<ControlUnit> logger,
+        IDatabaseService databaseService)
     {
         InitializeTrafficLightSets();
         _messagingService = messagingService;
         _trafficLightService = trafficLightService;
         _logger = logger;
+        _databaseService = databaseService;
     }
 
     public async Task RunNormalOperation()
@@ -72,6 +75,8 @@ public class ControlUnit : IControlUnit
             light1Status,
             _trafficLightSet2.Status.ToString(),
             light2Status);
+
+        await SendStatusToDatabase();
     }
 
     private void ChangeColorForLight(TrafficLightCommand command)
@@ -95,6 +100,28 @@ public class ControlUnit : IControlUnit
         _trafficLightSet2.SetStatus();
     }
 
+    private async Task SendStatusToDatabase()
+    {
+        foreach (var model in _trafficLightSet1.TrafficLights.Select(trafficLight => new TrafficLightStatusModel
+                 {
+                     TrafficLightId = trafficLight.TrafficLightId,
+                     Color = trafficLight.Color.ToString(),
+                     LastChanged = trafficLight.LastChanged
+                 }))
+        {
+            await _databaseService.AddTrafficLightStatus(model);
+        }
+
+        foreach (var model in _trafficLightSet2.TrafficLights.Select(trafficLight => new TrafficLightStatusModel
+                 {
+                     TrafficLightId = trafficLight.TrafficLightId,
+                     Color = trafficLight.Color.ToString(),
+                     LastChanged = trafficLight.LastChanged
+                 }))
+        {
+            await _databaseService.AddTrafficLightStatus(model);
+        }
+    }
     private void InitializeTrafficLightSets()
     {
         _trafficLightSet1 = new TrafficLightSet(
