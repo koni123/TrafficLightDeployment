@@ -10,7 +10,9 @@ which can be found under master branch.
 
 * Control unit manages the logic for using traffic lights
 * Traffic light service mimics the traffic lights and acts under control unit's commands
+* Database Service stores the traffic light statuses to database and can be queried for current status
 * RabbitMQ messaging is used for queues between control unit and traffic lights.
+* PostgreSQL is used to store traffic light statuses into database (only max 10 minutes of history)
 
 ### Branching
 * exercise/deployment for task "Deployment of microservices"

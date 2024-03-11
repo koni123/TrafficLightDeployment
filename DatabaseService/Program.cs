@@ -44,4 +44,13 @@ app.MapGet("/traffic-light-status",
     .WithName("GetTrafficLightStatus")
     .WithOpenApi();
 
+app.MapGet("/traffic-light-status/all",
+        async (IDbService dbService) =>
+        {
+            var list = await dbService.GetAllAsync();
+            return list;
+        })
+    .WithName("GetTrafficLightStatusAll")
+    .WithOpenApi();
+
 app.Run();

@@ -6,4 +6,5 @@ public interface IDbService
 {
     Task AddModelToDatabaseAsync(TrafficLightStatusModel statusModel);
     Task<List<TrafficLightStatusModel>> GetCurrentStatusAsync();
+    Task<List<TrafficLightStatusModel>> GetAllAsync();
 }

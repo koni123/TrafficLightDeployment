@@ -14,6 +14,10 @@ public class DbService : IDbService
 
     public async Task AddModelToDatabaseAsync(TrafficLightStatusModel statusModel)
     {
+        await _context.TrafficLight
+            .Where(tl => tl.LastChanged < DateTime.UtcNow.AddMinutes(-10))
+            .ExecuteDeleteAsync();
+
         _context.Add(statusModel);
         await _context.SaveChangesAsync();
     }
@@ -39,5 +43,11 @@ public class DbService : IDbService
         }
 
         return statuses;
+    }
+
+    public async Task<List<TrafficLightStatusModel>> GetAllAsync()
+    {
+        return await _context.TrafficLight
+            .ToListAsync();
     }
 }
