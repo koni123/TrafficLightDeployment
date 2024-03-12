@@ -14,6 +14,13 @@ which can be found under master branch.
 * RabbitMQ messaging is used for queues between control unit and traffic lights.
 * PostgreSQL is used to store traffic light statuses into database (only max 10 minutes of history)
 
+### Testing
+Solution contains projects for unit testing and integration testing. Integation
+testing is done with using in memory web application factory and 
+[testcontainers for .net](https://dotnet.testcontainers.org/) for spinning up necessary databases.
+This is by no means production ready tested but testing projects have been wired up
+and few tests written as an example..
+
 ### Branching
 * exercise/deployment for task "Deployment of microservices"
 * master for task "Course project"
