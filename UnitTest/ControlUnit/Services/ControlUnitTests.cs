@@ -10,15 +10,16 @@ public class ControlUnitTests
 {
     private readonly IMessagingService _messagingService = Substitute.For<IMessagingService>();
     private readonly ITrafficLightService _trafficLightService = Substitute.For<ITrafficLightService>();
+    private readonly IDatabaseService _databaseService = Substitute.For<IDatabaseService>();
 
     private readonly ILogger<global::ControlUnit.Services.ControlUnit> _logger =
         Substitute.For<ILogger<global::ControlUnit.Services.ControlUnit>>();
 
-    private readonly IControlUnit _sut;
+    private readonly global::ControlUnit.Services.ControlUnit _sut;
 
     public ControlUnitTests()
     {
-        _sut = new global::ControlUnit.Services.ControlUnit(_messagingService, _trafficLightService, _logger);
+        _sut = new global::ControlUnit.Services.ControlUnit(_messagingService, _trafficLightService, _logger, _databaseService);
     }
 
     [Fact]

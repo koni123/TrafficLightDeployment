@@ -10,6 +10,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UnitTest", "UnitTest\UnitTe
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DatabaseService", "DatabaseService\DatabaseService.csproj", "{622BCDAC-F380-4214-9909-4BB7E5803C44}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IntegrationTest", "IntegrationTest\IntegrationTest.csproj", "{963271B8-1577-4290-A699-87C2B84EC5E1}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -36,5 +38,9 @@ Global
 		{622BCDAC-F380-4214-9909-4BB7E5803C44}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{622BCDAC-F380-4214-9909-4BB7E5803C44}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{622BCDAC-F380-4214-9909-4BB7E5803C44}.Release|Any CPU.Build.0 = Release|Any CPU
+		{963271B8-1577-4290-A699-87C2B84EC5E1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{963271B8-1577-4290-A699-87C2B84EC5E1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{963271B8-1577-4290-A699-87C2B84EC5E1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{963271B8-1577-4290-A699-87C2B84EC5E1}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

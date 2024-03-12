@@ -1,7 +1,6 @@
 using DatabaseService;
 using DatabaseService.Database;
 using DatabaseService.Services;
-using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.EntityFrameworkCore;
 using Shared.Models;
 
@@ -12,7 +11,8 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-builder.Services.AddDbContext<TrafficLightContext>();
+builder.Services.AddDbContext<TrafficLightContext>((_, option) => 
+    option.UseNpgsql("Host=database;Database=traffic_light;Username=postgres;Password=postgres"));
 builder.Services.AddScoped<IDbService, DbService>();
 var app = builder.Build();
 
