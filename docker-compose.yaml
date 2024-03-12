@@ -39,6 +39,19 @@ services:
         condition: service_healthy
     networks:
       - traffic-light-network
+        
+  ui:
+    build:
+      context: ./UI
+      dockerfile: Dockerfile
+    container_name: ui
+    ports:
+      - "5000:8080"
+    depends_on:
+      database:
+        condition: service_healthy
+    networks:
+      - traffic-light-network  
 
   rabbitmq:
     image: rabbitmq:3-management

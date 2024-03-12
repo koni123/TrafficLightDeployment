@@ -3,7 +3,7 @@ version: "3.8"
 services:
   control-unit:
     build:
-      context: "H:\\dev\\TrafficLightDeployment\\ControlUnit"
+      context: "C:\\dev\\OAMK\\TrafficLightDeployment\\ControlUnit"
       dockerfile: "Dockerfile"
       target: "base"
     command: []
@@ -16,13 +16,13 @@ services:
     image: "controlunit:dev"
     ports: []
     volumes:
-    - "C:\\Users\\koni\\.nuget\\packages:/home/app/.nuget/packages"
-    - "H:\\dev\\TrafficLightDeployment\\ControlUnit:/app:rw"
-    - "H:\\dev\\TrafficLightDeployment:/src:rw"
+    - "C:\\Users\\nikot\\.nuget\\packages:/home/app/.nuget/packages"
+    - "C:\\dev\\OAMK\\TrafficLightDeployment\\ControlUnit:/app:rw"
+    - "C:\\dev\\OAMK\\TrafficLightDeployment:/src:rw"
     working_dir: "/app"
   database-service:
     build:
-      context: "H:\\dev\\TrafficLightDeployment\\DatabaseService"
+      context: "C:\\dev\\OAMK\\TrafficLightDeployment\\DatabaseService"
       dockerfile: "Dockerfile"
       target: "base"
     command: []
@@ -35,13 +35,13 @@ services:
     image: "databaseservice:dev"
     ports: []
     volumes:
-    - "C:\\Users\\koni\\.nuget\\packages:/home/app/.nuget/packages"
-    - "H:\\dev\\TrafficLightDeployment\\DatabaseService:/app:rw"
-    - "H:\\dev\\TrafficLightDeployment:/src:rw"
+    - "C:\\Users\\nikot\\.nuget\\packages:/home/app/.nuget/packages"
+    - "C:\\dev\\OAMK\\TrafficLightDeployment\\DatabaseService:/app:rw"
+    - "C:\\dev\\OAMK\\TrafficLightDeployment:/src:rw"
     working_dir: "/app"
   traffic-light:
     build:
-      context: "H:\\dev\\TrafficLightDeployment\\TrafficLight"
+      context: "C:\\dev\\OAMK\\TrafficLightDeployment\\TrafficLight"
       dockerfile: "Dockerfile"
       target: "base"
     command: []
@@ -54,7 +54,27 @@ services:
     image: "trafficlight:dev"
     ports: []
     volumes:
-    - "C:\\Users\\koni\\.nuget\\packages:/home/app/.nuget/packages"
-    - "H:\\dev\\TrafficLightDeployment\\TrafficLight:/app:rw"
-    - "H:\\dev\\TrafficLightDeployment:/src:rw"
+    - "C:\\Users\\nikot\\.nuget\\packages:/home/app/.nuget/packages"
+    - "C:\\dev\\OAMK\\TrafficLightDeployment\\TrafficLight:/app:rw"
+    - "C:\\dev\\OAMK\\TrafficLightDeployment:/src:rw"
+    working_dir: "/app"
+  ui:
+    build:
+      context: "C:\\dev\\OAMK\\TrafficLightDeployment\\UI"
+      dockerfile: "Dockerfile"
+      target: "base"
+    command: []
+    entrypoint:
+    - "dotnet"
+    - "/app/bin/Debug/net8.0/UI.dll"
+    environment:
+      ASPNETCORE_ENVIRONMENT: "Development"
+      ASPNETCORE_STATICWEBASSETS: "/app/bin/Debug/net8.0/UI.staticwebassets.runtime.CT.json"
+      DOTNET_USE_POLLING_FILE_WATCHER: "true"
+    image: "ui:dev"
+    ports: []
+    volumes:
+    - "C:\\Users\\nikot\\.nuget\\packages:/home/app/.nuget/packages"
+    - "C:\\dev\\OAMK\\TrafficLightDeployment\\UI:/app:rw"
+    - "C:\\dev\\OAMK\\TrafficLightDeployment:/src:rw"
     working_dir: "/app"
