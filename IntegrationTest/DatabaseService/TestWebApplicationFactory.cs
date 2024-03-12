@@ -1,5 +1,4 @@
-﻿using System.Data.Common;
-using DatabaseService;
+﻿using DatabaseService;
 using DatabaseService.Database;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
