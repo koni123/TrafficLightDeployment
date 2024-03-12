@@ -9,10 +9,13 @@ services:
     depends_on:
       rabbitmq:
         condition: service_healthy
+      database-service:
+        condition: service_started
     networks:
       - traffic-light-network
     environment:
       RABBIT_HOSTNAME: rabbitmq
+      DB_BASE_URL: http://database-service:8080
 
   traffic-light:
     build:
@@ -51,7 +54,9 @@ services:
       database:
         condition: service_healthy
     networks:
-      - traffic-light-network  
+      - traffic-light-network
+    environment:
+      DB_BASE_URL: http://database-service:8080
 
   rabbitmq:
     image: rabbitmq:3-management

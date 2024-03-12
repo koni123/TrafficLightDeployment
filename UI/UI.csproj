@@ -13,4 +13,12 @@
       </Content>
     </ItemGroup>
 
+    <ItemGroup>
+      <ProjectReference Include="..\Shared\Shared.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <PackageReference Include="Majorsoft.Blazor.Components.Timer" Version="1.5.0" />
+    </ItemGroup>
+
 </Project>

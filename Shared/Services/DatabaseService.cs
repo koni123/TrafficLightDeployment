@@ -11,7 +11,8 @@ public class DatabaseService : IDatabaseService
     public DatabaseService(HttpClient httpClient)
     {
         _httpClient = httpClient;
-        _httpClient.BaseAddress = new Uri("http://database-service:8080");
+        var baseAddress = Environment.GetEnvironmentVariable("DB_BASE_URL") ?? "http://localhost:8080";
+        _httpClient.BaseAddress = new Uri(baseAddress);
     }
 
     public async Task AddTrafficLightStatus(TrafficLightStatusDto statusDto)
@@ -19,5 +20,19 @@ public class DatabaseService : IDatabaseService
         using var message = new HttpRequestMessage(HttpMethod.Post, "traffic-light-status");
         message.Content = new StringContent(JsonSerializer.Serialize(statusDto), Encoding.UTF8, "application/json");
         await _httpClient.SendAsync(message);
+    }
+
+    public async Task<List<TrafficLightStatusDto>> GetCurrentStatusAsync()
+    {
+        var response = await _httpClient.GetAsync("traffic-light-status");
+        var content = await response.Content.ReadAsStringAsync();
+        var opt = new JsonSerializerOptions() { PropertyNameCaseInsensitive = true };
+        return JsonSerializer.Deserialize<List<TrafficLightStatusDto>>(content, opt) ?? [];
+    }
+
+    public async Task<List<TrafficLightStatusDto>> GetAllAsync()
+    {
+        var response = await _httpClient.GetAsync("traffic-light-status/all");
+        return JsonSerializer.Deserialize<List<TrafficLightStatusDto>>(await response.Content.ReadAsStringAsync()) ?? [];
     }
 }

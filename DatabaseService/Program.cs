@@ -60,4 +60,4 @@ app.MapGet("/traffic-light-status/all",
     .WithName("GetTrafficLightStatusAll")
     .WithOpenApi();
 
-app.Run("http://localhost:5000");
+app.Run();

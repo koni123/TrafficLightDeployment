@@ -1,0 +1,58 @@
+﻿@page "/"
+@using Shared.Services
+@using Shared.Models
+@attribute [StreamRendering]
+@inject IDatabaseService DatabaseService
+
+<PageTitle>Weather</PageTitle>
+
+<h1>Traffic light status</h1>
+
+<table class="table">
+    <thead>
+    <tr>
+        @foreach (var trafficLightStatus in _trafficLightStatuses)
+        {
+            <th>@trafficLightStatus.TrafficLightId</th>
+        }
+    </tr>
+    </thead>
+    <tbody>
+    <tr>
+        @foreach (var trafficLightStatus in _trafficLightStatuses)
+        {
+            <td>@trafficLightStatus.Color</td>
+        }
+    </tr>
+    <tr>
+        @foreach (var trafficLightStatus in _trafficLightStatuses)
+        {
+            <td><img src="images/@(trafficLightStatus.Color).svg" alt="@(trafficLightStatus.Color)"/></td>
+        }
+    </tr>
+    </tbody>
+</table>
+
+@code {
+
+    private List<TrafficLightStatusDto> _trafficLightStatuses = [];
+    private readonly PeriodicTimer _timer = new(new TimeSpan(0, 0, 1));
+
+    protected override async Task OnInitializedAsync()
+    {
+        await RunTimer();
+    }
+
+    private async Task RunTimer()
+    {
+        while (await _timer.WaitForNextTickAsync())
+        {
+            var statuses = await DatabaseService.GetCurrentStatusAsync();
+            _trafficLightStatuses = statuses
+                .OrderBy(tl => tl.TrafficLightId)
+                .ToList();
+
+            StateHasChanged();
+        }
+    }
+}
