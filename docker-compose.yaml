@@ -61,6 +61,7 @@ services:
       - traffic-light-network
     environment:
       DB_BASE_URL: http://database-service:8080
+      RABBIT_HOSTNAME: rabbitmq
 
   rabbitmq:
     image: rabbitmq:3-management

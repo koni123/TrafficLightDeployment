@@ -4,7 +4,9 @@ namespace Shared.Services;
 
 public interface IDatabaseService
 {
-    Task AddTrafficLightStatus(TrafficLightStatusDto statusDto);
+    Task AddTrafficLightStatusAsync(TrafficLightStatusDto statusDto);
     Task<List<TrafficLightStatusDto>> GetCurrentStatusAsync();
+    Task AddControlUnitOperationModeAsync(OperationModeDto operationMode);
+    Task<OperationModeDto?> GetControlUnitOperationModeAsync();
     Task<List<TrafficLightStatusDto>> GetAllAsync();
 }

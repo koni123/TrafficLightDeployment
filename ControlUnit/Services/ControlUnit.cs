@@ -9,6 +9,7 @@ public class ControlUnit : IControlUnit
 {
     private TrafficLightSet _trafficLightSet1 = new([]);
     private TrafficLightSet _trafficLightSet2 = new([]);
+    private string _currentOperationMode = TrafficLightOperationMode.Stop;
 
     private readonly IMessagingService _messagingService;
     private readonly IDatabaseService _databaseService;
@@ -28,11 +29,34 @@ public class ControlUnit : IControlUnit
         _databaseService = databaseService;
     }
 
-    public async Task RunNormalOperation()
+    public async Task RunOperation(string? operationMode)
+    {
+        if (!string.IsNullOrWhiteSpace(operationMode))
+        {
+            _currentOperationMode = operationMode;
+        }
+
+        await _databaseService.AddControlUnitOperationModeAsync(
+            new OperationModeDto(_currentOperationMode, DateTime.UtcNow));
+        
+        switch (_currentOperationMode)
+        {
+            case TrafficLightOperationMode.Normal:
+                await RunNormalOperation();
+                break;
+            case TrafficLightOperationMode.Stop:
+                await RunStopOperation();
+                break;
+            default:
+                throw new ArgumentOutOfRangeException();
+        }
+    }
+
+    private async Task RunNormalOperation()
     {
         var correlationId = Guid.NewGuid().ToString();
         (_trafficLightSet1.Status, _trafficLightSet2.Status) =
-            _trafficLightService.GetSetStatuses(_trafficLightSet1, _trafficLightSet2);
+            _trafficLightService.GetSetNormalStatuses(_trafficLightSet1, _trafficLightSet2);
 
         if (_trafficLightSet1.Status == TrafficLightStatus.Transition &&
             _trafficLightSet2.Status == TrafficLightStatus.Transition)
@@ -43,6 +67,30 @@ public class ControlUnit : IControlUnit
         }
 
         var commands = _trafficLightService.GetNormalOperationCommands(_trafficLightSet1, _trafficLightSet2);
+        if (commands.Count != _trafficLightSet1.TrafficLights.Count + _trafficLightSet2.TrafficLights.Count)
+        {
+            InitializeTrafficLightSets();
+            throw new ApplicationException("Wrong amount of commands received from logic! Resetting rotation.");
+        }
+
+        await HandleLightCommands(commands, correlationId);
+    }
+
+    private async Task RunStopOperation()
+    {
+        var correlationId = Guid.NewGuid().ToString();
+        (_trafficLightSet1.Status, _trafficLightSet2.Status) =
+            _trafficLightService.GetSetStopStatuses(_trafficLightSet1, _trafficLightSet2);
+
+        if (_trafficLightSet1.Status == TrafficLightStatus.Transition &&
+            _trafficLightSet2.Status == TrafficLightStatus.Transition)
+        {
+            InitializeTrafficLightSets();
+            throw new ApplicationException(
+                "Fatal error in application - all lights in transition! Resetting rotation.");
+        }
+
+        var commands = _trafficLightService.GetStopOperationCommands(_trafficLightSet1, _trafficLightSet2);
         if (commands.Count != _trafficLightSet1.TrafficLights.Count + _trafficLightSet2.TrafficLights.Count)
         {
             InitializeTrafficLightSets();
@@ -109,7 +157,7 @@ public class ControlUnit : IControlUnit
                      LastChanged = trafficLight.LastChanged
                  }))
         {
-            await _databaseService.AddTrafficLightStatus(model);
+            await _databaseService.AddTrafficLightStatusAsync(model);
         }
 
         foreach (var model in _trafficLightSet2.TrafficLights.Select(trafficLight => new TrafficLightStatusDto
@@ -119,9 +167,10 @@ public class ControlUnit : IControlUnit
                      LastChanged = trafficLight.LastChanged
                  }))
         {
-            await _databaseService.AddTrafficLightStatus(model);
+            await _databaseService.AddTrafficLightStatusAsync(model);
         }
     }
+
     private void InitializeTrafficLightSets()
     {
         _trafficLightSet1 = new TrafficLightSet(

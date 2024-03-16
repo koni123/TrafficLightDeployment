@@ -13,7 +13,26 @@ public class DbService : IDbService
         _context = context;
     }
 
-    public async Task AddModelToDatabaseAsync(TrafficLightStatusDto statusModel)
+    public async Task AddOperationModeToDatabaseAsync(OperationModeDto operationMode)
+    {
+        var model = new OperationModeModel
+        {
+            OperationMode = operationMode.OperationMode,
+            CreatedAt = operationMode.CreatedAt
+        };
+
+        _context.Add(model);
+        await _context.SaveChangesAsync();
+    }
+
+    public async Task<OperationModeModel?> GetCurrentModeAsync()
+    {
+        return await _context.OperationModeModels
+            .OrderByDescending(o => o.CreatedAt)
+            .FirstOrDefaultAsync();
+    }
+
+    public async Task AddStatusModelToDatabaseAsync(TrafficLightStatusDto statusModel)
     {
         await _context.TrafficLight
             .Where(tl => tl.ModifiedAt < DateTime.UtcNow.AddMinutes(-10))
@@ -44,7 +63,7 @@ public class DbService : IDbService
         {
             var status = await _context.TrafficLight
                 .Where(tl => tl.TrafficLightId == id)
-                .OrderByDescending(tl => tl.LastChanged)
+                .OrderByDescending(tl => tl.ModifiedAt)
                 .FirstOrDefaultAsync();
             if (status is null) continue;
             statuses.Add(status);

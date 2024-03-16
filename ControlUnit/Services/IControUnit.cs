@@ -2,5 +2,5 @@ namespace ControlUnit.Services;
 
 public interface IControlUnit
 {
-    public Task RunNormalOperation();
+    public Task RunOperation(string? operationMode);
 }

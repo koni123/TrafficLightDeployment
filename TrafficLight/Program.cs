@@ -31,5 +31,5 @@ while (true)
         TrafficLightConfig.TrafficLightToControlUnitQueueName,
         service.CommandHandler);
 
-    await Task.Delay(2000);
+    await Task.Delay(1000);
 }

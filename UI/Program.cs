@@ -1,5 +1,6 @@
 using Shared.Services;
 using UI.Components;
+using UI.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -7,6 +8,9 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents();
 builder.Services.AddHttpClient<IDatabaseService, DatabaseService>();
+builder.Services.AddScoped<StatusSyncService>();
+builder.Services.AddScoped<NotifyService>();
+builder.Services.AddMessagingService();
 
 var app = builder.Build();
 

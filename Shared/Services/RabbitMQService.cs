@@ -9,7 +9,7 @@ namespace Shared.Services;
 public class RabbitMqService : IRabbitMqService
 { 
     public async Task SendCommandAsync<T>(string queueName, T commandMessage, string routingKey,
-        string expirationTimeMs = "2000")
+        string expirationTimeMs = "3000")
     {
         using var connection = await GetConnection("TrafficLightOperation");
         using var channel = await GetChannelAndQueueAsync(connection, queueName, routingKey);
@@ -35,6 +35,7 @@ public class RabbitMqService : IRabbitMqService
         await channel.BasicQosAsync(0, 1, false);
 
         var watch = new Stopwatch();
+        watch.Start();
 
         T? result = default;
         while (watch.Elapsed < TimeSpan.FromMilliseconds(tryForMs) && result is null)

@@ -3,7 +3,7 @@ version: "3.8"
 services:
   control-unit:
     build:
-      context: "C:\\dev\\OAMK\\TrafficLightDeployment\\ControlUnit"
+      context: "H:\\dev\\TrafficLightDeployment\\ControlUnit"
       dockerfile: "Dockerfile"
       target: "base"
     command: []
@@ -16,13 +16,13 @@ services:
     image: "controlunit:dev"
     ports: []
     volumes:
-    - "C:\\Users\\nikot\\.nuget\\packages:/home/app/.nuget/packages"
-    - "C:\\dev\\OAMK\\TrafficLightDeployment\\ControlUnit:/app:rw"
-    - "C:\\dev\\OAMK\\TrafficLightDeployment:/src:rw"
+    - "C:\\Users\\koni\\.nuget\\packages:/home/app/.nuget/packages"
+    - "H:\\dev\\TrafficLightDeployment\\ControlUnit:/app:rw"
+    - "H:\\dev\\TrafficLightDeployment:/src:rw"
     working_dir: "/app"
   database-service:
     build:
-      context: "C:\\dev\\OAMK\\TrafficLightDeployment\\DatabaseService"
+      context: "H:\\dev\\TrafficLightDeployment\\DatabaseService"
       dockerfile: "Dockerfile"
       target: "base"
     command: []
@@ -35,13 +35,13 @@ services:
     image: "databaseservice:dev"
     ports: []
     volumes:
-    - "C:\\Users\\nikot\\.nuget\\packages:/home/app/.nuget/packages"
-    - "C:\\dev\\OAMK\\TrafficLightDeployment\\DatabaseService:/app:rw"
-    - "C:\\dev\\OAMK\\TrafficLightDeployment:/src:rw"
+    - "C:\\Users\\koni\\.nuget\\packages:/home/app/.nuget/packages"
+    - "H:\\dev\\TrafficLightDeployment\\DatabaseService:/app:rw"
+    - "H:\\dev\\TrafficLightDeployment:/src:rw"
     working_dir: "/app"
   traffic-light:
     build:
-      context: "C:\\dev\\OAMK\\TrafficLightDeployment\\TrafficLight"
+      context: "H:\\dev\\TrafficLightDeployment\\TrafficLight"
       dockerfile: "Dockerfile"
       target: "base"
     command: []
@@ -54,13 +54,13 @@ services:
     image: "trafficlight:dev"
     ports: []
     volumes:
-    - "C:\\Users\\nikot\\.nuget\\packages:/home/app/.nuget/packages"
-    - "C:\\dev\\OAMK\\TrafficLightDeployment\\TrafficLight:/app:rw"
-    - "C:\\dev\\OAMK\\TrafficLightDeployment:/src:rw"
+    - "C:\\Users\\koni\\.nuget\\packages:/home/app/.nuget/packages"
+    - "H:\\dev\\TrafficLightDeployment\\TrafficLight:/app:rw"
+    - "H:\\dev\\TrafficLightDeployment:/src:rw"
     working_dir: "/app"
   ui:
     build:
-      context: "C:\\dev\\OAMK\\TrafficLightDeployment\\UI"
+      context: "H:\\dev\\TrafficLightDeployment\\UI"
       dockerfile: "Dockerfile"
       target: "base"
     command: []
@@ -74,7 +74,7 @@ services:
     image: "ui:dev"
     ports: []
     volumes:
-    - "C:\\Users\\nikot\\.nuget\\packages:/home/app/.nuget/packages"
-    - "C:\\dev\\OAMK\\TrafficLightDeployment\\UI:/app:rw"
-    - "C:\\dev\\OAMK\\TrafficLightDeployment:/src:rw"
+    - "C:\\Users\\koni\\.nuget\\packages:/home/app/.nuget/packages"
+    - "H:\\dev\\TrafficLightDeployment\\UI:/app:rw"
+    - "H:\\dev\\TrafficLightDeployment:/src:rw"
     working_dir: "/app"

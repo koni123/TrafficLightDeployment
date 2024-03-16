@@ -139,7 +139,7 @@ public class TrafficLightServiceTests
         var trafficLightSet2 = new TrafficLightSet([new TrafficLight("someId")]);
 
         // act
-        var (status1, status2) = _sut.GetSetStatuses(trafficLightSet1, trafficLightSet2);
+        var (status1, status2) = _sut.GetSetNormalStatuses(trafficLightSet1, trafficLightSet2);
 
         // assert
         Assert.Equal(TrafficLightStatus.Transition, status1);

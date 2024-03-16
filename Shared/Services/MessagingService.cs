@@ -6,7 +6,7 @@ namespace Shared.Services;
 public class MessagingService(ILogger<MessagingService> logger, IRabbitMqService rabbitMqService) : IMessagingService
 {
     public async Task<T?> SendAndReceiveAsync<T>(T commandMessage, string queueTo, string queueFrom,
-        int responseMaxWaitTimeMs = 2000) where T : ITrackedMessage, new()
+        int responseMaxWaitTimeMs = 3000) where T : ITrackedMessage, new()
     {
         await rabbitMqService.SendCommandAsync(
             queueTo,
@@ -44,5 +44,19 @@ public class MessagingService(ILogger<MessagingService> logger, IRabbitMqService
         await rabbitMqService.SendCommandAsync(queueTo, handledResult,
             TrafficLightConfig.TrafficLightToControlUnitRoutingKey);
         logger.LogDebug("Command received and handled!");
+    }
+    
+    public async Task<T?> ReceiveAsync<T>(string queueFrom, string routingKey) where T : ITrackedMessage
+    {
+        logger.LogDebug("Start to fetch messages from queue!");
+        return await rabbitMqService.ReceiveFromQueueAsync<T>(
+            queueFrom,
+            routingKey,
+            500);
+    }
+    
+    public async Task SendAsync<T>(string queueTo, string routingKey, T message) where T : ITrackedMessage
+    {
+        await rabbitMqService.SendCommandAsync(queueTo, message, routingKey, "10000");
     }
 }

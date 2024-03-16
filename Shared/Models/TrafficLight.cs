@@ -19,10 +19,10 @@ public class TrafficLight
     {
         return Color switch
         {
-            TrafficLightColor.Green => dateTimeNow < LastChanged.AddSeconds(8)
+            TrafficLightColor.Green => dateTimeNow < LastChanged.AddSeconds(5)
                 ? TrafficLightColor.Green
                 : TrafficLightColor.Yellow,
-            TrafficLightColor.Yellow => dateTimeNow < LastChanged.AddSeconds(5)
+            TrafficLightColor.Yellow => dateTimeNow < LastChanged.AddSeconds(3)
                 ? TrafficLightColor.Yellow
                 : TrafficLightColor.Red,
             TrafficLightColor.Red => TrafficLightColor.Green,

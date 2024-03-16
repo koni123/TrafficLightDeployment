@@ -1,14 +1,23 @@
 ﻿@page "/"
-@using Shared.Services
-@using Shared.Models
 @attribute [StreamRendering]
-@inject IDatabaseService DatabaseService
+@using Shared.Models
+@using Shared.Services
+@using Shared.Contracts
+@using UI.Services
+@implements IDisposable
+@inject IMessagingService MessagingService
+@inject StatusSyncService StatusSync
+@inject NotifyService Notify
+@rendermode InteractiveServer
 
 <PageTitle>Traffic light status</PageTitle>
 
 <h1>Traffic light status</h1>
+<p>Light remains green for 5 seconds and yellow for 3 seconds.</p>
+<h2>Operation mode: ====== @(_operationMode?.OperationMode ?? "Unknown mode") ======</h2>
+<h2>Requested status: @(_requestedStatus)</h2>
 
-<table class="table">
+<table class="table" style="max-width: 1000px;">
     <thead>
     <tr>
         @foreach (var trafficLightStatus in _trafficLightStatuses)
@@ -27,32 +36,82 @@
     <tr>
         @foreach (var trafficLightStatus in _trafficLightStatuses)
         {
-            <td><img src="images/@(trafficLightStatus.Color).svg" alt="@(trafficLightStatus.Color)"/></td>
+            <td>
+                <img src="images/@(trafficLightStatus.Color).svg" alt="@(trafficLightStatus.Color)"/>
+            </td>
         }
     </tr>
     </tbody>
 </table>
 
+<div class="flex">
+    <button class="btn btn-primary"
+            disabled="@(_requestedStatus == TrafficLightOperationMode.Normal)"
+            @onclick="async () => await SendNormalModeCommand()">
+        Set mode to NORMAL
+    </button>
+    <button class="btn btn-danger"
+            disabled="@(_requestedStatus == TrafficLightOperationMode.Stop)"
+            @onclick="async () => await SendStopModeCommand()">
+        Set mode to STOP
+    </button>
+</div>
+
 @code {
-
     private List<TrafficLightStatusDto> _trafficLightStatuses = [];
-    private readonly PeriodicTimer _timer = new(new TimeSpan(0, 0, 1));
+    private OperationModeDto? _operationMode;
+    private string _requestedStatus = "no request yet";
 
-    protected override async Task OnInitializedAsync()
+    protected override void OnInitialized()
     {
-        await RunTimer();
+        Notify.Notify += OnNotify;
+        _ = Task.Run(StatusSync.Start);
     }
 
-    private async Task RunTimer()
+    private async Task OnNotify(List<TrafficLightStatusDto> list, OperationModeDto? operationMode)
     {
-        while (await _timer.WaitForNextTickAsync())
+        await InvokeAsync(() =>
         {
-            var statuses = await DatabaseService.GetCurrentStatusAsync();
-            _trafficLightStatuses = statuses
-                .OrderBy(tl => tl.TrafficLightId)
-                .ToList();
-
+            _trafficLightStatuses = list;
+            _operationMode = operationMode;
             StateHasChanged();
-        }
+        });
     }
+
+    public void Dispose() => Notify.Notify -= OnNotify;
+
+    private async Task SendNormalModeCommand()
+    {
+        _requestedStatus = TrafficLightOperationMode.Normal;
+        await SendCommand(new OperationModeCommand
+        {
+            CorrelationId = Guid.NewGuid().ToString(),
+            TrafficLightOperationMode = TrafficLightOperationMode.Normal
+        });
+    }
+
+    private async Task SendStopModeCommand()
+    {
+        _requestedStatus = TrafficLightOperationMode.Stop;
+        await SendCommand(new OperationModeCommand
+        {
+            CorrelationId = Guid.NewGuid().ToString(),
+            TrafficLightOperationMode = TrafficLightOperationMode.Stop
+        });
+    }
+
+    private async Task SendCommand(OperationModeCommand command)
+    {
+        Console.WriteLine("SENT");
+        Console.WriteLine("SENT");
+        Console.WriteLine("SENT");
+        Console.WriteLine("SENT");
+        Console.WriteLine("SENT");
+        Console.WriteLine("SENT");
+        Console.WriteLine("SENT");
+        Console.WriteLine("SENT");
+        Console.WriteLine("SENT");
+        await MessagingService.SendAsync(TrafficLightConfig.UiToControlUnitQueueName, TrafficLightConfig.UiToControlUnitRoutingKey, command);
+    }
+
 }

@@ -1,6 +1,7 @@
 using ControlUnit.Services;
 using Microsoft.Extensions.Logging;
 using NSubstitute;
+using Shared.Contracts;
 using Shared.Models;
 using Shared.Services;
 
@@ -28,11 +29,11 @@ public class ControlUnitTests
         // arrange
         var status1 = TrafficLightStatus.Transition;
         var status2 = TrafficLightStatus.Transition;
-        _trafficLightService.GetSetStatuses(Arg.Any<TrafficLightSet>(), Arg.Any<TrafficLightSet>())
+        _trafficLightService.GetSetNormalStatuses(Arg.Any<TrafficLightSet>(), Arg.Any<TrafficLightSet>())
             .Returns((status1, status2));
 
         // act
-        var result = await Record.ExceptionAsync(() => _sut.RunNormalOperation());
+        var result = await Record.ExceptionAsync(() => _sut.RunOperation(TrafficLightOperationMode.Normal));
 
         // assert
         Assert.NotNull(result);

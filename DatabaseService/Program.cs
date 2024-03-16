@@ -11,7 +11,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-builder.Services.AddDbContext<TrafficLightContext>((_, option) => 
+builder.Services.AddDbContext<TrafficLightContext>((_, option) =>
     option.UseNpgsql("Host=database;Database=traffic_light;Username=postgres;Password=postgres"));
 builder.Services.AddScoped<IDbService, DbService>();
 var app = builder
@@ -32,10 +32,29 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
+app.MapPost("/operation-mode",
+        async (OperationModeDto operationMode, IDbService dbService) =>
+        {
+            await dbService.AddOperationModeToDatabaseAsync(operationMode);
+        })
+    .WithName("SaveOperationMode")
+    .WithOpenApi();
+
+app.MapGet("/operation-mode",
+        async (IDbService dbService) =>
+        {
+            var model = await dbService.GetCurrentModeAsync();
+            return model is null
+                ? null
+                : new OperationModeDto(model.OperationMode, model.CreatedAt);
+        })
+    .WithName("GetCurrentOperationMode")
+    .WithOpenApi();
+
 app.MapPost("/traffic-light-status",
         async (TrafficLightStatusDto model, IDbService dbService) =>
         {
-            await dbService.AddModelToDatabaseAsync(model);
+            await dbService.AddStatusModelToDatabaseAsync(model);
         })
     .WithName("SaveTrafficLightStatus")
     .WithOpenApi();

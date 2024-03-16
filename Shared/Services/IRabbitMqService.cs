@@ -6,7 +6,7 @@ public interface IRabbitMqService
         string queueName,
         T commandMessage,
         string routingKey,
-        string expirationTimeMs = "2000");
+        string expirationTimeMs = "3000");
 
     public Task<T?> ReceiveFromQueueAsync<T>(
         string queueName,
